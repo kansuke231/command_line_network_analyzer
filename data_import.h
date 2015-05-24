@@ -33,10 +33,17 @@ struct AdjacencyList
 	adj_list *next;
 };
 
-edge_list * getEdgeList(char *fname);
+typedef struct Tuple tuple;
+struct Tuple
+{
+	edge_list * head;
+    int max;
+};
+
+tuple getEdgeList(char *fname);
 adj_list * searchNode(adj_list * head, Node t);
 adj_nodes * makeAdjNodes(Node t, int w);
 void addNeighbors(adj_nodes * vs, Node t, int w);
-adj_list * makeAdjList(edge_list * head);
+adj_nodes ** makeAdjList(tuple head_n_m);
 
 #endif

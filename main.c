@@ -2,29 +2,27 @@
 #include<stdlib.h>
 #include "data_import.h"
 
-
 int main(int argc, char const *argv[])
 {
 	
-	edge_list *head;
-	adj_nodes * adj_v;
+	int i;
+	tuple head_n_m;
+	adj_nodes *adj_v, **adjacency_list;
 
-	head = getEdgeList("test.txt");
-	adj_list *adj_head;
-	adj_head = makeAdjList(head);
-	while(adj_head)
+	head_n_m = getEdgeList("test.txt");
+	adjacency_list = makeAdjList(head_n_m);
+
+	for(i = 0;i <= head_n_m.max; i++)
 	{
-		printf("in main, u:%d\n",adj_head -> u);
-
-		adj_v = adj_head -> vs;
+		printf("u:%d\n",i);
+		adj_v = adjacency_list[i];
 
 		while(adj_v != NULL)
 		{
-			printf("v:%d w:%d\n",adj_v -> v,adj_v -> weight);
+			printf("--v:%d w:%d\n",adj_v -> v,adj_v -> weight);
 			adj_v = adj_v -> next;
 		}
-		adj_head = adj_head -> next;
 	}
-
+	
 	return 0;
 }

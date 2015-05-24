@@ -1,8 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include "data_import.h"
 
-edge_list * getEdgeList(char *fname){
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MAX3(a, b, c) ((a) > (MAX(b, c)) ? (a) : (MAX(b, c)))
+
+tuple getEdgeList(char *fname){
 	/*
 	input: a pointer to a string fname (file name)
 	output: a pointer to the struct object edge_list
@@ -11,27 +15,35 @@ edge_list * getEdgeList(char *fname){
 	edge_list *head, *curr;
 	head = NULL;
 	FILE *fp;
+    int max = 0;
+    tuple head_n_m; 
+    char line[128];
+
+    head_n_m.head = NULL;
+    head_n_m.max = 0;
 
 	fp = fopen( fname, "r" );
 
 	if( fp == NULL )
 	{
     	printf( "can not open the file:%s\n", fname );
-    	return NULL;
+    	return head_n_m;
     }
-
    
-    char line[128];
     while (fgets(line, sizeof(line), fp))
     {
     	curr = (edge_list *)malloc(sizeof(edge_list));
     	sscanf(line,"%d,%d,%d",&(curr -> e.u),&(curr -> e.v),&(curr -> e.weight));
     	curr -> next = head;
+        max = MAX3(max, curr -> e.u, curr -> e.v);
     	head = curr;
-
     }
     fclose(fp);
-    return head;
+
+    head_n_m.head = head;
+    head_n_m.max = max;
+
+    return head_n_m;
 }
 
 
@@ -92,35 +104,34 @@ void addNeighbors(adj_nodes * vs, Node t, int w)
 
 }
 
-adj_list * makeAdjList(edge_list * head)
+adj_nodes ** makeAdjList(tuple head_n_m)
 {
     /*
     input: a pointer to an edge_list object
-    output: a pointer to an adj_list object
+    output: a pointer (array) of pointers to adj_nodes objects
     This function creates an adjacency list  for a given edge list
     */
-    adj_list * root, * adj_p, * p;
-    root = NULL;
+    edge_list * head;
+    int max;
+    head = head_n_m.head;
+    max = head_n_m.max;
+    adj_nodes **adjacency_list = (adj_nodes **)malloc(sizeof(adj_nodes *)*(max+1));
+    memset(adjacency_list,0,sizeof(adjacency_list[0])*(max+1));
 
     while(head)
     {
-        if( (adj_p = searchNode(root,head -> e.u)) != NULL)
+        if(adjacency_list[head -> e.u] != 0)
         {
-            addNeighbors(adj_p -> vs,head -> e.v, head -> e.weight);
+            addNeighbors(adjacency_list[head -> e.u],head -> e.v, head -> e.weight);
         }
         else
         {
-
-            p = (adj_list *)malloc(sizeof(adj_list));
-            p -> u = head -> e.u;
-            p -> vs = makeAdjNodes(head -> e.v, head -> e.weight);
-            p -> next = root;
-            root = p;
+            adjacency_list[head -> e.u] = makeAdjNodes(head -> e.v, head -> e.weight);
         }
-
         head = head -> next;
         
     }
-    return root;
+    
+    return adjacency_list;
 
 }
