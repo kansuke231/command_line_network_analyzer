@@ -46,25 +46,6 @@ tuple getEdgeList(char *fname){
     return head_n_m;
 }
 
-
-adj_list * searchNode(adj_list * head, Node t)
-{
-    /*
-    input: a pointer to adj_list object and a target node t
-    output: a pointer to adj_list object
-    This function searches the target node t in an adjacency list
-    and returns its pointer in the list or NULL if not found
-    */
-    while(head){
-        if(head -> u == t)
-        {
-            return head;
-        }
-        head = head -> next;
-    }
-    return NULL;
-}
-
 adj_nodes * makeAdjNodes(Node t, int w)
 {
     /*
@@ -104,7 +85,7 @@ void addNeighbors(adj_nodes * vs, Node t, int w)
 
 }
 
-adj_nodes ** makeAdjList(tuple head_n_m)
+adj_list makeAdjList(tuple head_n_m)
 {
     /*
     input: a pointer to an edge_list object
@@ -115,7 +96,7 @@ adj_nodes ** makeAdjList(tuple head_n_m)
     int max;
     head = head_n_m.head;
     max = head_n_m.max;
-    adj_nodes **adjacency_list = (adj_nodes **)malloc(sizeof(adj_nodes *)*(max+1));
+    adj_list adjacency_list = (adj_nodes **)malloc(sizeof(adj_nodes *)*(max+1));
     memset(adjacency_list,0,sizeof(adjacency_list[0])*(max+1));
 
     while(head)

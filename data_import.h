@@ -25,14 +25,6 @@ struct AdjacentNodes
 	adj_nodes *next;
 };
 
-typedef struct AdjacencyList adj_list;
-struct AdjacencyList
-{
-	Node u;
-	adj_nodes *vs;
-	adj_list *next;
-};
-
 typedef struct Tuple tuple;
 struct Tuple
 {
@@ -40,10 +32,12 @@ struct Tuple
     int max;
 };
 
+typedef adj_nodes ** adj_list;
+
 tuple getEdgeList(char *fname);
 adj_list * searchNode(adj_list * head, Node t);
 adj_nodes * makeAdjNodes(Node t, int w);
 void addNeighbors(adj_nodes * vs, Node t, int w);
-adj_nodes ** makeAdjList(tuple head_n_m);
+adj_list makeAdjList(tuple head_n_m);
 
 #endif
